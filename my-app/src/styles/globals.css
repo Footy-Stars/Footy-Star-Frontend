@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Add this class in your global CSS file */
+.game-background {
+  background-image: url('/pixel_art\ \(1\).png');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+body {
+  background-color: #FFEBD8;
+}
+.droppable-field {
+  /* ... other styles ... */
+
+  /* Create a gradient or stripes pattern to visualize the strips */
+  background-image: linear-gradient(
+    to right,
+    transparent,
+    transparent 10%,
+    white 10%,
+    white 20%,
+    transparent 20%,
+    transparent 30%,
+    /* Repeat as necessary for each strip */
+  );
+  background-size: cover;
+}
