@@ -114,6 +114,11 @@ export default function RoomId() {
   };
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpen2,
+    onOpen: OnOpen2,
+    onClose: onClose2,
+  } = useDisclosure();
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -241,6 +246,7 @@ export default function RoomId() {
             paddingRight={10}
             paddingTop={10}
             paddingBottom={10}
+            onClick={OnOpen2}
           >
             <h1 className="text-[20px]">Play</h1>
           </Button>
@@ -352,6 +358,32 @@ export default function RoomId() {
               Close
             </Button>
             <Button variant="ghost">Secondary Action</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={isOpen2} onClose={onClose2}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalCloseButton />
+          <ModalBody>
+            <div className="flex text-[20px] justify-center px-[50px]">
+              <h1>Your Elo:</h1>
+              <p>1,405</p>
+            </div>
+            <div className="flex text-[20px] justify-center px-[50px]">
+              <h1>Matching Tier:</h1>
+              <p>Division 9</p>
+            </div>
+            <div className="flex  text-[20px] justify-center px-[50px]">
+              <h1>Wager Amount:</h1>
+              <p>0.005 ETH</p>
+            </div>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              CONFIRM
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
