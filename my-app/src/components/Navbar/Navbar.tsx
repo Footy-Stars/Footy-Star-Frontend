@@ -16,7 +16,7 @@ export const Navbar = () => {
           <Button onClick={() => router.push("/")}>Player Management</Button>
         </div>
         <div className="ml-[10px]">
-          <Button onClick={() => router.push("/team-formation")}>
+          <Button onClick={() => router.push("/team-configuration")}>
             Team Configuration
           </Button>
         </div>

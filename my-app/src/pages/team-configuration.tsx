@@ -24,30 +24,54 @@ import React, { useEffect, useRef, useState } from "react";
 import { DndProvider } from "react-dnd";
 import Image from "next/image";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import FootballPlayer from "../../public/FootballPlayer.json";
+import MatchMaking from "../../public/MatchMaking.json";
+import {
+  useAccount,
+  useContractRead,
+  useContractWrite,
+  usePrepareContractWrite,
+} from "wagmi";
+import { ethers } from "ethers";
 
 interface Position {
   x: number;
   y: number;
 }
 
+interface RawMetadata {
+  error: string | null;
+  metadata: {
+    name: string;
+    image: string;
+    attributes: {
+      trait_type: string;
+      value: string;
+    }[];
+  };
+  tokenUri: string;
+}
+
 export default function RoomId() {
   const [strikerCard, setStrikerCard] = useState<number[]>([1, 2]);
   const [goalKeeperCard, setGoalKeeperCard] = useState<number[]>([]);
-  const [players, setPlayers] = useState<{ [key: number]: number | null }>({
-    1: null,
-    2: null,
-    3: null,
-    4: null,
-    5: null,
-    6: null,
-    7: null,
-    8: null,
-    9: null,
-    10: null,
-    // Ensure all player IDs from strikerCard and goalKeeperCard have initial positions as null
-  });
+  const [players, setPlayers] = useState<{ [key: number]: RawMetadata | null }>(
+    {
+      1: null,
+      2: null,
+      3: null,
+      4: null,
+      5: null,
+      6: null,
+      7: null,
+      8: null,
+      9: null,
+      10: null,
+      // Ensure all player IDs from strikerCard and goalKeeperCard have initial positions as null
+    }
+  );
 
-  const [availablePlayers, setAvailablePlayers] = useState([1, 2, 3, 4, 5]); // List of available players
+  const [availablePlayers, setAvailablePlayers] = useState([]); // List of available players
 
   const [selectedPlayer, setSelectedPlayer] = useState<string>("player 1");
   const [id, setId] = useState<number>(0);
@@ -101,6 +125,7 @@ export default function RoomId() {
   }, []);
 
   const droppableFieldRef = useRef<HTMLDivElement>(null);
+  const { address } = useAccount();
 
   const handleOpenModal = (position: Position) => {
     setSelectedPosition(position);
@@ -112,6 +137,48 @@ export default function RoomId() {
     console.log(id);
     onOpen();
   };
+
+  const { config } = usePrepareContractWrite({
+    address: process.env.NEXT_PUBLIC_MATCH_MAKING_ADDRESS as `0x${string}`,
+    abi: MatchMaking.abi,
+    functionName: "quickMatch",
+    args: [],
+  });
+
+  const { write, isLoading, isSuccess } = useContractWrite(config);
+
+  const handlePlay = () => {
+    if (write) write();
+  };
+
+  const handleClearField = () => {
+    window.location.reload();
+  };
+
+  useEffect(() => {
+    if (availablePlayers.length === 0) {
+      const options = {
+        method: "GET",
+        headers: { accept: "application/json" },
+      };
+
+      fetch(
+        `https://eth-sepolia.g.alchemy.com/nft/v3/z6F5YIkN7g8W25b2_IJKT1iKKiEWsfvf/getNFTsForOwner?owner=${address}&contractAddresses[]=${process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS}&withMetadata=true&pageSize=100`,
+        options
+      )
+        .then((response) => response.json())
+        .then((response) => {
+          const player = response.ownedNfts;
+          console.log(response);
+          setAvailablePlayers(player);
+        })
+        .catch((err) => console.error(err));
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log(players);
+  }, [players]);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -153,7 +220,7 @@ export default function RoomId() {
                 >
                   {players[index] !== null ? (
                     <Image
-                      src="/SoccerCard.png" // Replace with your soccer player image source
+                      src={players[index]?.metadata.image} // Replace with your soccer player image source
                       alt={`Soccer Player ${index + 1}`}
                       width={70}
                       height={70}
@@ -250,6 +317,16 @@ export default function RoomId() {
           >
             <h1 className="text-[20px]">Play</h1>
           </Button>
+          <Button
+            colorScheme="red"
+            paddingLeft={10}
+            paddingRight={10}
+            paddingTop={10}
+            paddingBottom={10}
+            onClick={handleClearField}
+          >
+            <h1 className="text-[20px]">Clear Field</h1>
+          </Button>
         </div>
       </div>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -262,75 +339,81 @@ export default function RoomId() {
               onChange={(e) => {
                 const selectedPlayer = parseInt(e.target.value);
                 console.log(selectedPlayer);
+                console.log(availablePlayers[1].tokenId);
+                console.log(availablePlayers[0].tokenId === selectedPlayer);
+                const playerData = availablePlayers.find(
+                  (player) => parseInt(player.tokenId) === selectedPlayer
+                );
+                console.log(playerData);
                 switch (id) {
                   case 0:
                     setPosition1Player(selectedPlayer);
                     setPlayers({
                       ...players,
-                      [id]: selectedPlayer,
+                      [id]: playerData?.raw,
                     });
                     break;
                   case 1:
                     setPosition2Player(selectedPlayer);
                     setPlayers({
                       ...players,
-                      [id]: selectedPlayer,
+                      [id]: playerData?.raw,
                     });
                     break;
                   case 2:
                     setPosition3Player(selectedPlayer);
                     setPlayers({
                       ...players,
-                      [id]: selectedPlayer,
+                      [id]: playerData?.raw,
                     });
                     break;
                   case 3:
                     setPosition4Player(selectedPlayer);
                     setPlayers({
                       ...players,
-                      [id]: selectedPlayer,
+                      [id]: playerData?.raw,
                     });
                     break;
                   case 4:
                     setPosition5Player(selectedPlayer);
                     setPlayers({
                       ...players,
-                      [id]: selectedPlayer,
+                      [id]: playerData?.raw,
                     });
                     break;
                   case 5:
                     setPosition6Player(selectedPlayer);
                     setPlayers({
                       ...players,
-                      [id]: selectedPlayer,
+                      [id]: playerData?.raw,
                     });
                     break;
                   case 6:
                     setPosition7Player(selectedPlayer);
                     setPlayers({
                       ...players,
-                      [id]: selectedPlayer,
+                      [id]: playerData?.raw,
                     });
                     break;
                   case 7:
                     setPosition8Player(selectedPlayer);
                     setPlayers({
                       ...players,
-                      [id]: selectedPlayer,
+                      [id]: playerData?.raw,
                     });
                     break;
                   case 8:
                     setPosition9Player(selectedPlayer);
                     setPlayers({
                       ...players,
-                      [id]: selectedPlayer,
+                      [id]: playerData?.raw,
                     });
                     break;
                   case 9:
                     setPosition10Player(selectedPlayer);
                     setPlayers({
                       ...players,
-                      [id]: selectedPlayer,
+                      [id]: playerData?.raw,
                     });
                     break;
                   default:
@@ -339,16 +422,17 @@ export default function RoomId() {
 
                 // Remove the selected player from the available players
                 const updatedAvailablePlayers = availablePlayers.filter(
-                  (player) => player !== selectedPlayer
+                  (player) => parseInt(player.tokenId) !== selectedPlayer
                 );
+                console.log("Selected Player", selectedPlayer);
+                console.log("Updated Playes", updatedAvailablePlayers);
                 // Update the available players list
-                // based on the field positions that have been assigned players
                 setAvailablePlayers(updatedAvailablePlayers);
               }}
             >
-              {availablePlayers.map((player) => (
-                <option key={player} value={player}>
-                  Player {player}
+              {availablePlayers.map((player, index) => (
+                <option key={index} value={player.tokenId}>
+                  {player.raw?.metadata.attributes[0].value}
                 </option>
               ))}
             </Select>
@@ -381,7 +465,7 @@ export default function RoomId() {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
+            <Button colorScheme="blue" mr={3} onClick={handlePlay}>
               CONFIRM
             </Button>
           </ModalFooter>
