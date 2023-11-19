@@ -1,38 +1,38 @@
 {
-    "image": "https://nftstorage.link/ipfs/bafybeibrezx5tnscqogx64q3cjhukcdcsbem5skufnchjgxsbu736gy6ti/9.png",
-    "name": "Footy-Stars #9",
+    "image": "https://nftstorage.link/ipfs/bafybeibrezx5tnscqogx64q3cjhukcdcsbem5skufnchjgxsbu736gy6ti/11.png",
+    "name": "Footy-Stars #11",
     "attributes": [
         {
             "trait_type": "Name",
-            "value": "Declan Rice"
+            "value": "Luka Modrić"
         },
         {
             "trait_type": "Overall",
-            "value": 85
+            "value": 87
         },
         {
             "trait_type": "PAC",
-            "value": 71
+            "value": 72
         },
         {
             "trait_type": "SHO",
-            "value": 65
+            "value": 76
         },
         {
             "trait_type": "PAS",
-            "value": 75
+            "value": 89
         },
         {
             "trait_type": "DRI",
-            "value": 77
+            "value": 87
         },
         {
             "trait_type": "DEF",
-            "value": 83
+            "value": 72
         },
         {
             "trait_type": "PHY",
-            "value": 83
+            "value": 66
         }
     ]
 }

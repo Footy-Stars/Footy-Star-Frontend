@@ -1,38 +1,38 @@
 {
-    "image": "https://nftstorage.link/ipfs/bafybeibrezx5tnscqogx64q3cjhukcdcsbem5skufnchjgxsbu736gy6ti/9.png",
-    "name": "Footy-Stars #9",
+    "image": "https://nftstorage.link/ipfs/bafybeibrezx5tnscqogx64q3cjhukcdcsbem5skufnchjgxsbu736gy6ti/12.png",
+    "name": "Footy-Stars #12",
     "attributes": [
         {
             "trait_type": "Name",
-            "value": "Declan Rice"
+            "value": "Jude Bellingham"
         },
         {
             "trait_type": "Overall",
-            "value": 85
+            "value": 87
         },
         {
             "trait_type": "PAC",
-            "value": 71
-        },
-        {
-            "trait_type": "SHO",
-            "value": 65
-        },
-        {
-            "trait_type": "PAS",
-            "value": 75
-        },
-        {
-            "trait_type": "DRI",
             "value": 77
         },
         {
+            "trait_type": "SHO",
+            "value": 82
+        },
+        {
+            "trait_type": "PAS",
+            "value": 81
+        },
+        {
+            "trait_type": "DRI",
+            "value": 86
+        },
+        {
             "trait_type": "DEF",
-            "value": 83
+            "value": 78
         },
         {
             "trait_type": "PHY",
-            "value": 83
+            "value": 82
         }
     ]
 }

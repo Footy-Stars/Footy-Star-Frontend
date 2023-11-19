@@ -1,14 +1,38 @@
 {
-    "image": "https://bafybeie5sl2xhjulzojmcs5gl3eyc5ez4ldfmwhu42casm77qo6p7ln7oa.ipfs.nftstorage.link/",
-    "name": "Footy-Stars #3",
+    "image": "https://nftstorage.link/ipfs/bafybeibrezx5tnscqogx64q3cjhukcdcsbem5skufnchjgxsbu736gy6ti/10.png",
+    "name": "Footy-Stars #10",
     "attributes": [
         {
             "trait_type": "Name",
-            "value": "Mohamed Salah"
+            "value": "Casemiro"
         },
         {
             "trait_type": "Overall",
-            "value": 90
+            "value": 88
+        },
+        {
+            "trait_type": "PAC",
+            "value": 61
+        },
+        {
+            "trait_type": "SHO",
+            "value": 75
+        },
+        {
+            "trait_type": "PAS",
+            "value": 78
+        },
+        {
+            "trait_type": "DRI",
+            "value": 72
+        },
+        {
+            "trait_type": "DEF",
+            "value": 88
+        },
+        {
+            "trait_type": "PHY",
+            "value": 87
         }
     ]
 }

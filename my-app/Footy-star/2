@@ -1,14 +1,38 @@
 {
-    "image": "https://bafybeie5sl2xhjulzojmcs5gl3eyc5ez4ldfmwhu42casm77qo6p7ln7oa.ipfs.nftstorage.link/",
+    "image": "https://nftstorage.link/ipfs/bafybeibrezx5tnscqogx64q3cjhukcdcsbem5skufnchjgxsbu736gy6ti/2.png",
     "name": "Footy-Stars #2",
     "attributes": [
         {
             "trait_type": "Name",
-            "value": "Christian Ronaldo"
+            "value": "Heung Min Son"
         },
         {
             "trait_type": "Overall",
-            "value": 96
+            "value": 87
+        },
+        {
+            "trait_type": "PAC",
+            "value": 87
+        },
+        {
+            "trait_type": "SHO",
+            "value": 88
+        },
+        {
+            "trait_type": "PAS",
+            "value": 80
+        },
+        {
+            "trait_type": "DRI",
+            "value": 84
+        },
+        {
+            "trait_type": "DEF",
+            "value": 42
+        },
+        {
+            "trait_type": "PHY",
+            "value": 70
         }
     ]
 }

@@ -1,14 +1,38 @@
 {
-    "image": "https://bafybeie5sl2xhjulzojmcs5gl3eyc5ez4ldfmwhu42casm77qo6p7ln7oa.ipfs.nftstorage.link/",
-    "name": "Footy-Stars #3",
+    "image": "https://nftstorage.link/ipfs/bafybeibrezx5tnscqogx64q3cjhukcdcsbem5skufnchjgxsbu736gy6ti/6.png",
+    "name": "Footy-Stars #6",
     "attributes": [
         {
             "trait_type": "Name",
-            "value": "Karim Benzema"
+            "value": "Lionel Messi"
         },
         {
             "trait_type": "Overall",
             "value": 90
+        },
+        {
+            "trait_type": "PAC",
+            "value": 80
+        },
+        {
+            "trait_type": "SHO",
+            "value": 87
+        },
+        {
+            "trait_type": "PAS",
+            "value": 90
+        },
+        {
+            "trait_type": "DRI",
+            "value": 94
+        },
+        {
+            "trait_type": "DEF",
+            "value": 33
+        },
+        {
+            "trait_type": "PHY",
+            "value": 64
         }
     ]
 }
