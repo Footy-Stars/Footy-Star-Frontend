@@ -32,7 +32,8 @@ import {
   useContractWrite,
   usePrepareContractWrite,
 } from "wagmi";
-import { ethers } from "ethers";
+// import { ethers } from "ethers";
+
 
 interface Position {
   x: number;
@@ -273,29 +274,29 @@ export default function RoomId() {
           <div>
             <Card>
               <CardHeader>
-                <Heading size="md">Defensive</Heading>
+                <Heading size="md">Offensive</Heading>
               </CardHeader>
               <CardBody>
                 <Stack divider={<StackDivider />} spacing="4">
                   <Box className="flex flex-col">
                     <Heading size="xs" textTransform="uppercase">
-                      Defensive Styles
+                      Chance Creation
                     </Heading>
                     <Select>
-                      <option>Zone Marking</option>
-                      <option>Pressure on Heavy Touch</option>
+                      <option>Posession</option>
+                      <option>Forward Runs</option>
                     </Select>
                     <br />
                     <Heading size="xs" textTransform="uppercase">
-                      Defensive Depth
+                      Build-up Speed
                     </Heading>
                     <Select>
-                      <option>High Line</option>
-                      <option>Deep</option>
+                      <option> Slow</option>
+                      <option>Fast</option>
                     </Select>
                     <br />
                     <Heading size="xs" textTransform="uppercase">
-                      Defensive Width
+                      Offensive Width
                     </Heading>
                     <Select>
                       <option>Narrow</option>

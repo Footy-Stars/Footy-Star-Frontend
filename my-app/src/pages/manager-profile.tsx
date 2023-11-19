@@ -12,6 +12,7 @@ import {
 import { Table, Thead, Tbody, Tr, Th, Td,useColorModeValue } from '@chakra-ui/react';
 
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client'
+import { useAccount } from "wagmi";
 
 const APIURL = 'https://api.studio.thegraph.com/query/58768/testmatchmaking/v1'
 
@@ -46,11 +47,12 @@ const handleNaN = (value: number): number => {
 };
 
 export default function ManagerProfile() {
+  const { address, connector, isConnected } = useAccount()
+
   const [matches, setMatches] = useState([]);
   const [tx, setTx] = useState([]);
 
-  
-  const user = "0x8220fb68ca721bd317f5d49995e55e82ed772bd1";
+  const user = address;
 
   const fetchData = async () => {
     try {
