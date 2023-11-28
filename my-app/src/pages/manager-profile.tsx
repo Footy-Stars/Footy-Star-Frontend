@@ -52,7 +52,7 @@ export default function ManagerProfile() {
   const [matches, setMatches] = useState([]);
   const [tx, setTx] = useState([]);
 
-  const user = address;
+  const user = "0xbe92f2692f42580300fd8d0ee198b5bbbe303e78";
 
   const fetchData = async () => {
     try {
@@ -200,111 +200,7 @@ export default function ManagerProfile() {
         {matches.length>0?
               <MatchTable data={matches} />:
               <>No Matches Played</>
-
-      }
-     
-        {/* <Card>
-          <CardHeader>
-            <Heading size="md">Opponent</Heading>
-          </CardHeader>
-
-          <CardBody>
-            <Stack divider={<StackDivider />} spacing="4">
-              <Box>
-                <Heading size="xs" textTransform="uppercase">
-                  Summary
-                </Heading>
-                <Text pt="2" fontSize="sm">
-                  View a summary of all your clients over the last month.
-                </Text>
-              </Box>
-              <Box>
-                <Heading size="xs" textTransform="uppercase">
-                  Overview
-                </Heading>
-                <Text pt="2" fontSize="sm">
-                  Check out the overview of your clients.
-                </Text>
-              </Box>
-              <Box>
-                <Heading size="xs" textTransform="uppercase">
-                  Analysis
-                </Heading>
-                <Text pt="2" fontSize="sm">
-                  See a detailed analysis of all your business clients.
-                </Text>
-              </Box>
-            </Stack>
-          </CardBody>
-        </Card>
-        <Card>
-          <CardHeader>
-            <Heading size="md">Scoreline</Heading>
-          </CardHeader>
-
-          <CardBody>
-            <Stack divider={<StackDivider />} spacing="4">
-              <Box>
-                <Heading size="xs" textTransform="uppercase">
-                  Summary
-                </Heading>
-                <Text pt="2" fontSize="sm">
-                  View a summary of all your clients over the last month.
-                </Text>
-              </Box>
-              <Box>
-                <Heading size="xs" textTransform="uppercase">
-                  Overview
-                </Heading>
-                <Text pt="2" fontSize="sm">
-                  Check out the overview of your clients.
-                </Text>
-              </Box>
-              <Box>
-                <Heading size="xs" textTransform="uppercase">
-                  Analysis
-                </Heading>
-                <Text pt="2" fontSize="sm">
-                  See a detailed analysis of all your business clients.
-                </Text>
-              </Box>
-            </Stack>
-          </CardBody>
-        </Card>
-        <Card>
-          <CardHeader>
-            <Heading size="md">Result</Heading>
-          </CardHeader>
-
-          <CardBody>
-            <Stack divider={<StackDivider />} spacing="4">
-              <Box>
-                <Heading size="xs" textTransform="uppercase">
-                  Summary
-                </Heading>
-                <Text pt="2" fontSize="sm">
-                  View a summary of all your clients over the last month.
-                </Text>
-              </Box>
-              <Box>
-                <Heading size="xs" textTransform="uppercase">
-                  Overview
-                </Heading>
-                <Text pt="2" fontSize="sm">
-                  Check out the overview of your clients.
-                </Text>
-              </Box>
-              <Box>
-                <Heading size="xs" textTransform="uppercase">
-                  Analysis
-                </Heading>
-                <Text pt="2" fontSize="sm">
-                  See a detailed analysis of all your business clients.
-                </Text>
-              </Box>
-            </Stack>
-          </CardBody>
-        </Card> */}
+        }
       </div>
       <br/>
     </div>

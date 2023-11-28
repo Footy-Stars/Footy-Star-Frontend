@@ -88,7 +88,7 @@ export default function Prematch(){
         </Button>
         <br/>
         <Button colorScheme="blue">
-                Lock In Selection
+            Lock In Selection
         </Button>
 
     </div>

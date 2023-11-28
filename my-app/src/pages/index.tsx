@@ -14,12 +14,11 @@ export default function Home() {
           <Image src="/SoccerCard.png" width={200} height={200} alt="logo" />
         </div>
         <h1 className="text-[30px] mb-4">
-          Welcome to the On-Chain Football Manager
+          FootyStars
         </h1>
         <div className="typewriter">
           <p>
-            A place where people could play and bet on on chain foot ball
-            manager game using ZKML
+            Onchain fantasy football with real-world stakes and provable simulation.
           </p>
         </div>
         <br />

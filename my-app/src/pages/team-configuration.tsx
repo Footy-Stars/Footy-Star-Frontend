@@ -32,6 +32,7 @@ import {
   useContractWrite,
   usePrepareContractWrite,
 } from "wagmi";
+import Tactics from "@/components/Tactics/Tactics";
 // import { ethers } from "ethers";
 
 
@@ -232,7 +233,8 @@ export default function RoomId() {
             </div>
           </DroppableField>
         </div>
-        <div className="px-[100px] pt-[20px]">
+
+        {/* <div className="px-[100px] pt-[20px]">
           <h1 className="text-[50px]">Tactics</h1>
           <div>
             <Card>
@@ -307,7 +309,9 @@ export default function RoomId() {
               </CardBody>
             </Card>
           </div>
-        </div>
+        </div> */}
+        <Tactics/>
+        
         <div className="px-[100px] pt-[20px] flex justify-end">
           <Button
             paddingLeft={10}
@@ -431,11 +435,11 @@ export default function RoomId() {
                 setAvailablePlayers(updatedAvailablePlayers);
               }}
             >
-              {availablePlayers.map((player, index) => (
+              {/* {availablePlayers.length<1?(<option>no players</option>):(availablePlayers.map((player, index) => (
                 <option key={index} value={player.tokenId}>
                   {player.raw?.metadata.attributes[0].value}
                 </option>
-              ))}
+              )))} */}
             </Select>
           </ModalBody>
           <ModalFooter>
