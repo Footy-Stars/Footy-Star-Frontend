@@ -1,5 +1,3 @@
-import { CardPlayer } from "@/components/CardPlayer.tsx/CardPlayer";
-import { DroppableField } from "@/components/DroppableField/DroppableField";
 import {
   Modal,
   ModalOverlay,
@@ -11,30 +9,16 @@ import {
   Button,
   useDisclosure,
   Select,
-  Card,
-  Text,
-  CardBody,
-  CardHeader,
-  Heading,
-  Box,
-  Stack,
-  StackDivider,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import { DndProvider } from "react-dnd";
 import Image from "next/image";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import FootballPlayer from "../../public/FootballPlayer.json";
 import MatchMaking from "../../public/MatchMaking.json";
-import {
-  useAccount,
-  useContractRead,
-  useContractWrite,
-  usePrepareContractWrite,
-} from "wagmi";
+import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 import Tactics from "@/components/Tactics/Tactics";
 // import { ethers } from "ethers";
-
 
 interface Position {
   x: number;
@@ -55,8 +39,7 @@ interface RawMetadata {
 }
 
 export default function RoomId() {
-  const [strikerCard, setStrikerCard] = useState<number[]>([1, 2]);
-  const [goalKeeperCard, setGoalKeeperCard] = useState<number[]>([]);
+  const [field, setField] = useState([null, null, null, null, null]);
   const [players, setPlayers] = useState<{ [key: number]: RawMetadata | null }>(
     {
       1: null,
@@ -72,10 +55,14 @@ export default function RoomId() {
       // Ensure all player IDs from strikerCard and goalKeeperCard have initial positions as null
     }
   );
+  const [selectedPlayerTokenIds, setSelectedPlayerTokenIds] = useState<
+    Set<number>
+  >(new Set());
+
+  const toast = useToast();
 
   const [availablePlayers, setAvailablePlayers] = useState([]); // List of available players
 
-  const [selectedPlayer, setSelectedPlayer] = useState<string>("player 1");
   const [id, setId] = useState<number>(0);
 
   const [position1Player, setPosition1Player] = useState<number | null>(null);
@@ -140,6 +127,45 @@ export default function RoomId() {
     onOpen();
   };
 
+  const handleSelectPlayer = (selectedPlayer: any) => {
+    const selectedPlayerTokenId = selectedPlayer.tokenId;
+
+    // Check if the selected player has already been added to the field
+    if (selectedPlayerTokenIds.has(selectedPlayerTokenId)) {
+      // Player is already on the field, do not add duplicates
+      toast({
+        title: "Duplicate Player.",
+        description: "No Duplicate Players Allowed.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+
+      return;
+    }
+
+    // Update the selected position with the chosen player
+    const updatedPlayers = { ...players };
+    updatedPlayers[id] = selectedPlayer.raw;
+    setPlayers(updatedPlayers);
+
+    // Add the previous player back to available players
+    if (players[id] !== null) {
+      setAvailablePlayers([...availablePlayers, { raw: players[id] }]);
+    }
+
+    // Remove the selected player from available players
+    const updatedAvailablePlayers = availablePlayers.filter(
+      (player) => parseInt(player.tokenId) !== selectedPlayerTokenId
+    );
+    setAvailablePlayers(updatedAvailablePlayers);
+
+    // Add the selected player's tokenId to the set
+    setSelectedPlayerTokenIds(
+      new Set(selectedPlayerTokenIds).add(selectedPlayerTokenId)
+    );
+  };
+
   const { config } = usePrepareContractWrite({
     address: process.env.NEXT_PUBLIC_MATCH_MAKING_ADDRESS as `0x${string}`,
     abi: MatchMaking.abi,
@@ -157,6 +183,35 @@ export default function RoomId() {
     window.location.reload();
   };
 
+  const handleSaveConfiguration = () => {
+    const nullCount = Object.values(players).filter(
+      (player) => player === null
+    ).length;
+
+    if (nullCount > 5) {
+      // Display an error message or take appropriate action
+      toast({
+        title: "Incomplete Configuration.",
+        description: "Please fill the field with players.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      return;
+    } else {
+      // Continue with saving the configuration
+      toast({
+        title: "Configuration Saved.",
+        description: "Your configuration has been saved.",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+      // Add your logic to save the configuration here
+      //TODO
+    }
+  };
+
   useEffect(() => {
     if (availablePlayers.length === 0) {
       const options = {
@@ -171,7 +226,7 @@ export default function RoomId() {
         .then((response) => response.json())
         .then((response) => {
           const player = response.ownedNfts;
-          console.log(response);
+          console.log(response.ownedNfts);
           setAvailablePlayers(player);
         })
         .catch((err) => console.error(err));
@@ -193,22 +248,24 @@ export default function RoomId() {
     <DndProvider backend={HTML5Backend}>
       <div>
         <div className="flex justify-center">
-          <DroppableField>
-            <div
-              ref={droppableFieldRef}
-              className="game-background w-[1440px] h-[700px]"
-              onClick={(e) => {
-                const x = e.nativeEvent.offsetX; // Relative x position within the div
-                const y = e.nativeEvent.offsetY; // Relative y position within the div
-                handleOpenModal({ x, y });
-              }}
-              style={{
-                position: "relative", // Ensure the box is positioned relative to its container
-              }}
-            >
-              {/* Left 3rd layer */}
-              {sharedPositions.map((position, index) => (
+          <div
+            ref={droppableFieldRef}
+            className="game-background w-[1440px] h-[700px]"
+            onClick={(e) => {
+              const x = e.nativeEvent.offsetX; // Relative x position within the div
+              const y = e.nativeEvent.offsetY; // Relative y position within the div
+              handleOpenModal({ x, y });
+            }}
+            style={{
+              position: "relative", // Ensure the box is positioned relative to its container
+            }}
+          >
+            {/* Left 3rd layer */}
+            {sharedPositions.map((position, index) => {
+              console.log(players[index]);
+              return (
                 <div
+                  className="rounded"
                   key={index}
                   onClick={() => handleModal(index)} // Open modal with the specific position
                   style={{
@@ -220,107 +277,32 @@ export default function RoomId() {
                     left: `${position.x}px`,
                   }}
                 >
-                  {players[index] !== null ? (
+                  {players[index] !== null && players[index] !== undefined ? (
                     <Image
-                      src={players[index]?.metadata.image} // Replace with your soccer player image source
-                      alt={`Soccer Player ${index + 1}`}
+                      src={players[index]?.metadata.image}
+                      alt="Player"
                       width={70}
                       height={70}
                     />
                   ) : null}
                 </div>
-              ))}
-            </div>
-          </DroppableField>
+              );
+            })}
+          </div>
         </div>
 
-        {/* <div className="px-[100px] pt-[20px]">
-          <h1 className="text-[50px]">Tactics</h1>
-          <div>
-            <Card>
-              <CardHeader>
-                <Heading size="md">Defensive</Heading>
-              </CardHeader>
-              <CardBody>
-                <Stack divider={<StackDivider />} spacing="4">
-                  <Box className="flex flex-col">
-                    <Heading size="xs" textTransform="uppercase">
-                      Defensive Styles
-                    </Heading>
-                    <Select>
-                      <option>Zone Marking</option>
-                      <option>Pressure on Heavy Touch</option>
-                    </Select>
-                    <br />
-                    <Heading size="xs" textTransform="uppercase">
-                      Defensive Depth
-                    </Heading>
-                    <Select>
-                      <option>High Line</option>
-                      <option>Deep</option>
-                    </Select>
-                    <br />
-                    <Heading size="xs" textTransform="uppercase">
-                      Defensive Width
-                    </Heading>
-                    <Select>
-                      <option>Narrow</option>
-                      <option>Wide</option>
-                    </Select>
-                  </Box>
-                </Stack>
-              </CardBody>
-            </Card>
-          </div>
-          <br />
-          <div>
-            <Card>
-              <CardHeader>
-                <Heading size="md">Offensive</Heading>
-              </CardHeader>
-              <CardBody>
-                <Stack divider={<StackDivider />} spacing="4">
-                  <Box className="flex flex-col">
-                    <Heading size="xs" textTransform="uppercase">
-                      Chance Creation
-                    </Heading>
-                    <Select>
-                      <option>Posession</option>
-                      <option>Forward Runs</option>
-                    </Select>
-                    <br />
-                    <Heading size="xs" textTransform="uppercase">
-                      Build-up Speed
-                    </Heading>
-                    <Select>
-                      <option> Slow</option>
-                      <option>Fast</option>
-                    </Select>
-                    <br />
-                    <Heading size="xs" textTransform="uppercase">
-                      Offensive Width
-                    </Heading>
-                    <Select>
-                      <option>Narrow</option>
-                      <option>Wide</option>
-                    </Select>
-                  </Box>
-                </Stack>
-              </CardBody>
-            </Card>
-          </div>
-        </div> */}
-        <Tactics/>
-        
+        <Tactics />
+
         <div className="px-[100px] pt-[20px] flex justify-end">
           <Button
             paddingLeft={10}
             paddingRight={10}
             paddingTop={10}
             paddingBottom={10}
-            onClick={OnOpen2}
+            marginRight={10}
+            onClick={handleSaveConfiguration}
           >
-            <h1 className="text-[20px]">Play</h1>
+            <h1 className="text-[20px]">Save Configuration</h1>
           </Button>
           <Button
             colorScheme="red"
@@ -342,104 +324,24 @@ export default function RoomId() {
           <ModalBody>
             <Select
               onChange={(e) => {
-                const selectedPlayer = parseInt(e.target.value);
-                console.log(selectedPlayer);
-                console.log(availablePlayers[1].tokenId);
-                console.log(availablePlayers[0].tokenId === selectedPlayer);
-                const playerData = availablePlayers.find(
-                  (player) => parseInt(player.tokenId) === selectedPlayer
+                const selectedPlayerId = parseInt(e.target.value);
+                const selectedPlayer = availablePlayers.find(
+                  (player) => parseInt(player.tokenId) === selectedPlayerId
                 );
-                console.log(playerData);
-                switch (id) {
-                  case 0:
-                    setPosition1Player(selectedPlayer);
-                    setPlayers({
-                      ...players,
-                      [id]: playerData?.raw,
-                    });
-                    break;
-                  case 1:
-                    setPosition2Player(selectedPlayer);
-                    setPlayers({
-                      ...players,
-                      [id]: playerData?.raw,
-                    });
-                    break;
-                  case 2:
-                    setPosition3Player(selectedPlayer);
-                    setPlayers({
-                      ...players,
-                      [id]: playerData?.raw,
-                    });
-                    break;
-                  case 3:
-                    setPosition4Player(selectedPlayer);
-                    setPlayers({
-                      ...players,
-                      [id]: playerData?.raw,
-                    });
-                    break;
-                  case 4:
-                    setPosition5Player(selectedPlayer);
-                    setPlayers({
-                      ...players,
-                      [id]: playerData?.raw,
-                    });
-                    break;
-                  case 5:
-                    setPosition6Player(selectedPlayer);
-                    setPlayers({
-                      ...players,
-                      [id]: playerData?.raw,
-                    });
-                    break;
-                  case 6:
-                    setPosition7Player(selectedPlayer);
-                    setPlayers({
-                      ...players,
-                      [id]: playerData?.raw,
-                    });
-                    break;
-                  case 7:
-                    setPosition8Player(selectedPlayer);
-                    setPlayers({
-                      ...players,
-                      [id]: playerData?.raw,
-                    });
-                    break;
-                  case 8:
-                    setPosition9Player(selectedPlayer);
-                    setPlayers({
-                      ...players,
-                      [id]: playerData?.raw,
-                    });
-                    break;
-                  case 9:
-                    setPosition10Player(selectedPlayer);
-                    setPlayers({
-                      ...players,
-                      [id]: playerData?.raw,
-                    });
-                    break;
-                  default:
-                    break;
+                if (selectedPlayer) {
+                  handleSelectPlayer(selectedPlayer);
                 }
-
-                // Remove the selected player from the available players
-                const updatedAvailablePlayers = availablePlayers.filter(
-                  (player) => parseInt(player.tokenId) !== selectedPlayer
-                );
-                console.log("Selected Player", selectedPlayer);
-                console.log("Updated Playes", updatedAvailablePlayers);
-                // Update the available players list
-                setAvailablePlayers(updatedAvailablePlayers);
               }}
             >
-              {/* {availablePlayers.length<1?(<option>no players</option>):(availablePlayers.map((player, index) => (
-                <option key={index} value={player.tokenId}>
-                  {player.raw?.metadata.attributes[0].value}
-                </option>
-              )))} */}
+              {availablePlayers.length < 1 ? (
+                <option>no players</option>
+              ) : (
+                availablePlayers.map((player, index) => (
+                  <option key={index} value={player.tokenId}>
+                    {player.raw?.metadata.attributes[0].value}
+                  </option>
+                ))
+              )}
             </Select>
           </ModalBody>
           <ModalFooter>
